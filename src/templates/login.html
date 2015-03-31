@@ -1,0 +1,72 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Login</title>
+
+{% endblock %}
+
+{% block content %}
+
+	{% if not logged_in %}
+		<div class="row">
+		
+			<div class="span10 offset1">
+				<h1>Login with a pre-existing ID by clicking on that logo:</h1>
+			</div>
+		</div>
+		
+		<br><br><br>
+	{% endif %}
+	
+		<div class="row">			
+			
+			  {% if logged_in %}
+			  	<div style="text-align: center" class="span2 offset3">
+			    	<p>Hey there. Looks like you're logged in already.</p>
+			    </div>
+			    <div style="text-align: center" class="span2">
+			    	<a href="/profile" class="btn btn-large">Profile</a>
+			    </div>
+			    <div style="text-align: center" class="span2">
+			    	<a href="/logout" class="btn btn-large">Logout</a>
+			    </div>
+			  {% else %}
+            
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/google" class="hoverlighten"><img src="http://i.imgur.com/2iLQK.jpg" alt="google"></a>
+	                </div>
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/facebook" class="hoverlighten"><img src="http://i.imgur.com/AITWh.jpg" alt="facebook"></a>
+	                </div>
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/openid?identity_url=me.yahoo.com" class="hoverlighten"><img src="http://i.imgur.com/h07w9.jpg" alt="yahoo"></a>
+	                </div>
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/twitter" class="hoverlighten"><img src="http://i.imgur.com/bDj6v.jpg" alt="twitter"></a>
+	                </div>
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/linkedin" class="hoverlighten"><img src="http://i.imgur.com/xmvBq.png" alt="yahoo"></a>
+	                </div>
+	                <div style="text-align: center" class="span2">
+	                    <a href="/auth/windows_live" class="hoverlighten"><img src="http://i.imgur.com/CVleY.jpg" alt="windows live"></a>
+	                </div>
+            
+ 			  {% endif %}
+			
+			
+		</div>		
+		    
+		<br>
+		
+		<div class="row">
+			<div class="span12">
+					
+				<br><br><br><br>
+				            
+				<p>We are using <a href="http://oauth.net/">OAuth</a> which is a secure login system that 
+				simplifies things by allowing you to use a single ID for thousands of websites all over the internet. Great right?</p>
+			</div>
+		</div>
+	
+{% endblock %}
+​

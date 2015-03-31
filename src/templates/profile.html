@@ -1,0 +1,89 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>{{profileowner.username}}</title>
+
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript" src="/static/js/jquery.lightbox-0.5.js"></script>
+<link rel="stylesheet" type="text/css" href="/static/jquery.lightbox-0.5.css" media="screen" />
+{% endblock %}
+
+{% block content %}
+
+<script type="text/javascript">
+$(function() {
+	$('a.lightbox').lightBox();
+});
+</script>
+
+
+<div class="row">
+	<div class="span12">
+	
+	
+	  <ul class="nav nav-tabs center-it">
+	    <li><a href="/profile/{{profile_id}}" class="btn btn-large">Main</a></li>
+	    <li><a href="/profile/{{profile_id}}/adventures" class="btn btn-large">Adventures</a></li>
+	    <li><a href="/profile/{{profile_id}}/posts" class="btn btn-large">Posts</a></li>
+	    <li><a href="/profile/{{profile_id}}/todolist" class="btn btn-large">To-do List</a></li>
+	  </ul>​
+	
+	</div>
+</div>
+
+<div class="row">
+	<span class="span3">
+		<h2>{{profileowner.username}}</h2>
+    	<img src="{{avatar}}" alt="user photo" style="max-height: 200px;" class="center-it"><br>
+    	<h4>Prestige: {{profileowner.prestige}}</h4><br>
+    	<h4>Bio:</h4>
+    	<p>{{profileowner.bio}}</p>
+	    {% if quote %}
+	    <br>
+	    <h4>Favorite Quote:</h4>{{profileowner.quote}}
+	    {% endif %}
+	    <br>
+	    
+	    <hr>
+	    
+	    {% if owner %}
+			<h5><a href="/editprofile">Edit Profile</a></h5>
+		{% endif %}
+		{% if upload_url and owner %}
+    	<br>
+    	<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+        <h5>Upload a Picture:</h5><br>
+        <input type="file" name="file"><br> <button type="submit" class="btn">Upload</button>
+        </form>
+        {% endif %}
+    </span>
+	
+	 	<span class="span6">
+	 	{% if photosandinfo %}
+	 	<p class="muted">Click on a photo to see {{profileowner.username}}'s adventure there.</p>
+		{% for photo in photosandinfo %}
+			<br> <h4 class="center-it"><a class="center-it" href="/record/{{photo[2]}}/{{photo[1]}}">{{photo[1] | replace("-", " ")}}</a></h4>
+		  	<a class="center-it" href="/record/{{photo[2]}}/{{photo[1]}}"><img class="center-it" src="{{photo[0]}}" alt="user adventure image"></a><br>
+		{% endfor %}
+		{% else %}
+		<p class="muted">{{profileowner.username}} needs to add some photos!</p>
+		{% endif %}
+		</span>
+		
+		<span class="span3">
+			<h3>{{profileowner.username}}'s Groups:</h3>
+			{% if groups %}
+			    	<ul>
+					{% for group in groups %}
+			    		<li><a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a></li>
+			    	{% endfor %}
+			    	</ul>
+				<br><br>
+			{% else %}
+				<br>
+				<h4>{{profileowner.username}} should <a href="/groups">join some groups!</a></h4>
+			{% endif %}
+		</span>
+	</div>
+		
+​{% endblock %}

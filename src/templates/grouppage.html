@@ -1,0 +1,150 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>{{group.name | replace("-", " ")}}</title>
+
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		    <style type="text/css">
+		      html { height: 100% }
+		      body { height: 100%; margin: 0; padding: 0 }
+		      #map_canvas { height: 100% }
+		    </style>
+		    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+		    <script type="text/javascript">
+		
+		var map;	
+		var zoomVar = 3;
+		var lat = 37.7699298;
+		var lng = -93.4469157;
+		
+		{% if group.GPSlocation %}
+		zoomVar = 6;
+		lat = {{group.lat|json_encode|safe}};
+		lng = {{group.lng|json_encode|safe}};
+		{% endif %}
+		function initialize() {
+		  var USA = new google.maps.LatLng(lat, lng);
+		  var mapOptions = {
+		    zoom: zoomVar,
+		    center: USA,
+		    mapTypeId: google.maps.MapTypeId.TERRAIN
+		  };
+		  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+		  
+		// Global var
+		   var infowindow = new google.maps.InfoWindow();
+		
+		//put all the markers on the map
+		{% for record in records %}
+		
+		//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+		//I need the safe here because Jinja2 tries to escape the characters otherwise
+		var GPSlocation = {{record.GPSlocation|json_encode|safe}};	
+		var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);	
+		
+		var markerLatlng = new google.maps.LatLng(Lat, Lng);
+	    var title = {{record.title|json_encode|safe}}
+	    var iwContent = {{record.render_front()|json_encode|safe}}
+	    createMarker(markerLatlng ,title,iwContent);
+		
+		
+	    function createMarker(latlon,title,iwContent) {
+	        var marker = new google.maps.Marker({
+	            position: latlon,
+	            title: title,
+	            map: map
+	      });
+	
+	
+	    google.maps.event.addListener(marker, 'click', function () {
+	      infowindow.setContent(iwContent);
+	      infowindow.open(map, marker);
+	      });
+	
+	      }
+	    
+		{% endfor %}
+		
+		}
+		
+		</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+	<span class="span3">
+	<h2>{{group.name | replace("-", " ")}}</h2>
+    	<img src="{{avatar}}" alt="user photo" style="max-height: 200px;" class="center-it">
+    	
+   		{% if upload_url and creator %}
+	    	<br>
+	    	<form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+	        <h5>Upload a Picture:</h5><br>
+	        <input type="file" name="file"><br> <button type="submit" class="btn">Submit</button>
+	        </form>
+    	{% endif %}
+    	
+    	<br><br>
+    	<p>{{group.description}}</p>
+    	<br>
+    	<br>
+    	<h3>Members:</h3>
+    	{% for member in members %}
+				<h4><a href="/profile/{{member.key.id()}}">{{member.username | safe}}</a></h4>
+				<br>
+		{% endfor %}
+    </span>
+ 
+	 	<span class="span3">
+	 		<br><br>
+	 		<h3>Member Adventures</h3>
+									
+			{% for record in records %}
+				{{record.render_front() | safe}}
+				<br>
+			{% endfor %}
+			</span>
+			<span class="span5 offset1">
+				{% if creator %}
+					<a href="/deletegroup/{{group.key.id()}}/{{group.name}}" class="btn pull-right">Delete this group...</a>
+				{% elif member and not creator %}
+					<a href="/leavegroup/{{group.key.id()}}/{{group.name}}" class="btn pull-right">Leave this group...</a>
+				{% elif user and not member and not creator %}
+					<a href="/joingroup/{{group.key.id()}}/{{group.name}}" class="btn pull-right">Join this group!</a>
+				{% else %}
+					<div class="center-it alert alert-warning">  
+						<h4>You can join this group if you <a href="/login">login or register</a></h4>
+					</div>
+				{% endif %}
+				<br>
+				<div style="width:100%; height: 400px;">
+		  			<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+		  		</div>
+		  		<br><br><br>
+
+			    <h4>Group Announcements:</h4><br>
+			    {% if comments %}
+				  	{% for comment in comments %}
+						{{comment.render() | safe}}
+				  	{% endfor %}
+			    {% else %}
+			    	<h5>There don't seem to be any comments...</h5>
+			    {% endif %}
+			    
+			    {% if user %}
+				    <form method="post">
+				      	<label>
+				        	<textarea style="height: 50px; width: 300px;" name="content">{{content}}</textarea>
+				      	</label>
+						<br>
+						<input class="btn" type="submit">
+					</form>
+				{% endif %}				
+		</span>
+
+	</div>
+
+​{% endblock %}

@@ -1,0 +1,73 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Community</title>
+<meta name="description" content="Exployre is recording every place on the Earth where people go to adventure.">
+
+{% endblock %}
+
+{% block content %}
+	
+	<div class="row">
+	    <div class="span3"><br><br>
+	    				
+			<h4>Popular Groups</h4>
+			{% for group in groups %}
+			    {% if group.name %}
+					<li><a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a></li>
+				{% endif %}
+			{% endfor %}
+			
+			<br><br>
+			
+			<h4>Recent Forum Posts</h4>
+			{% for post in posts %}
+			    {% if post.subject %}
+					<li><a href="/posts/{{post.key().id()}}/{{post.title}}">{{post.subject | replace("-", " ")}}</a></li>
+				{% endif %}
+			{% endfor %}
+				
+	    
+	    </div>
+	
+		<div class="span6" style="background:#CFECFF; -webkit-border-radius: 35px; -moz-border-radius: 35px; border-radius: 35px;">
+				<div style="padding-right: 10px; padding-left: 10px;">	
+					<h3 class="center-it">This Week's Top Adventures:</h3>
+					
+				{% for photo in photosandinfo %}
+					<div style="width:40%; height:200px; float:left;">
+						<h4><a href="/record/{{photo[2]}}/{{photo[1]}}">{{photo[1] | replace("-", " ")}}</a></h4>
+						<p>{{photo[3] | truncate(140)}}</p>
+					</div>
+					<div style="width:50%; height:200px; float:right;">
+				  		<div class="center-it"><a href="/record/{{photo[2]}}/{{photo[1]}}"><img src="{{photo[0]}}" style="max-height:180px;" alt="user adventure image"></a></div>
+				  	</div>
+				  	<br><br>
+				{% endfor %}
+				  <br>
+				</div>
+		</div>
+			
+		<div class="span3"><br><br>
+			
+			<h4>New Users:</h4>
+	    	<ol>
+			    {% for exployrer in exployrers %}
+				    {% if exployrer.username %}
+						<li><a href="/profile/{{exployrer.key.id()}}">{{exployrer.username | safe}} || Prestige: {{exployrer.prestige | safe}}</a></li>
+					{% endif %}
+				{% endfor %}
+			</ol>
+			<br><br>
+			<h4>Recent Locations:</h4>
+	    		<ol>
+			    	{% for location in ranked_locations %}
+							<li><a href="/location/{{location.key.id()}}/{{location.title}}">{{location.title | replace("-", " ")}} || {{location.rating}}</a></li>
+					{% endfor %}
+				</ol>
+			
+	    	</div>
+	</div>
+         		   	   	
+{% endblock %}
+   	

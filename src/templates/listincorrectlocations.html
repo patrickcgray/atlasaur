@@ -1,0 +1,29 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+	<title>Incorrect Locations</title>
+	
+{% endblock %}
+
+
+{% block content %}
+	<div class="row">
+	 	<div class="span12">
+	 		<h2>Incorrect Locations:</h2>
+	 	</div>
+	</div>
+		
+	<div class="row">
+				
+				<span class="span12">
+				
+					{% for location in locations %}
+						<a href="/modifylocation/{{location.key.id()}}/{{location.title}}">{{location.title}}</a>
+						<br>
+					{% endfor %}
+					
+				</span>
+	</div>
+	
+{% endblock %}

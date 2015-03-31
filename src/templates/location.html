@@ -1,0 +1,14 @@
+<div>
+      <h1><a href="/location/{{loc.key.id()}}/{{loc.title}}">{{loc.title |replace('-',' ')}}</a></h1>
+       <div style="color:grey">
+	      <h4>Type: {{loc.locationtype}}</h4>
+	      <h4>Rating: {{loc.rating|round(2)}}/5</h4>
+	      {% if loc.website %}
+      	  	Website: {{loc.website | urlize(nofollow=True)}}
+      	  {% endif %}
+      </div>
+      
+      <h3>Description:</h3> {{loc.description}}<br>
+      <br>
+
+</div>

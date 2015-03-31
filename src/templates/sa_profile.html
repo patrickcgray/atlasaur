@@ -1,0 +1,9 @@
+{% extends "master.html" %}
+
+{% block content %}
+  <p>User ID: {{ user_id }}</p>
+  <p>User Prestige: {{ user['prestige'] }}</p>
+  <p> This is the data fetched from the authentication service </p>
+  {{ data }}<br>
+  <a href="/logout" class="btn">Logout from SimpleAuth</a>
+{% endblock %}

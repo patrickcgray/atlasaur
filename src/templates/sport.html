@@ -1,0 +1,63 @@
+{% extends "master.html" %}
+
+{% block head %}
+	<title>{{title | capitalize}}</title>
+{% endblock %}
+
+{% block content %}
+    
+	<div class="row">
+	
+		<div class="span12 center-it">
+			{% if category %}
+		    	<h3>Welcome to the {{category}} section:</h3>
+		    {% else %}
+		    <h3>Welcome to the {{title}} section:</h3>
+		    {% endif %}
+		</div>
+		
+	</div>
+	
+	<div class="row">
+	    <div class="span2">
+	    
+	    <h5><a href="/posts">Newest</a> or <a href="/topranked">Top Ranked</a> or <a href="/hotposts">Hottest</a></h5><br>
+   		<h5>Would you like something more specific?</h5>
+   		<br>
+   		
+          <h4><a href="/air">Air</a></h4>
+            <ul>
+			    <li><a href="/air/skydiving">Skydiving</a></li>
+			    <li><a href="/air/paragliding">Paragliding</a></li>
+			    <li><a href="/air/hanggliding">Hang Gliding</a></li>
+			    <li><a href="/air/basejumping">Base Jumping</a></li>
+			    <li><a href="/air/poweredflight">Powered Flight</a></li>
+			</ul>
+          <h4><a href="/sea">Sea</a></h4>
+            <ul>
+			    <li><a href="/sea/sailing">Sailing</a></li>
+			    <li><a href="/sea/diving">Diving</a></li>
+			    <li><a href="/sea/surfing">Surfing</a></li>
+			    <li><a href="/sea/kiteboarding">Kite Boarding</a></li>
+			    <li><a href="/sea/kayaking">Kayaking</a></li>
+			</ul>
+          <h4><a href="/land">Land</a></h4>
+            <ul>
+			    <li><a href="/land/rockclimbing">Rock Climbing</a></li>
+			    <li><a href="/land/hiking">Hiking</a></li>
+			    <li><a href="/land/camping">Camping</a></li>
+			    <li><a href="/land/biking">Biking</a></li>
+			    <li><a href="/land/skiing">Skiing</a></li>
+			    <li><a href="/land/snowboarding">Snowboarding</a></li>
+			</ul>
+		</div>
+	
+		<div class="span6 offset1">		    
+		    {% for post in posts %}
+				{{post.render_front() | safe}}
+			{% endfor %}
+		</div>
+         		
+   	</div>
+          
+{% endblock %}

@@ -1,0 +1,67 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>About</title>
+{% endblock %}
+<style>
+.twice-size {
+	font-size: 2em;
+}
+</style>
+{% block content %}
+	<div class="row">
+		<div class="span12">
+			<h2>Are you ready for Atlasaur?</h2><br>
+			<h4>We are finding and sharing the world's adventures.  We want it to be really easy 
+			for anyone to find the best outdoor activities and to make it convenient for them to 
+			keep track of their adventures and share with friends.</h4>
+		</div>
+		
+	</div>
+
+	<div class="row">
+	
+		<div class="span12"><br>
+			<h4>Site Layout:</h4>
+			<ul>
+				<li>Search for Adventure - your go to place for finding adventure anytime anywhere</li>
+				<li>The Community - check out fellow adventurers pictures, groups, and discover some recent adventures</li>
+				<li>After logging in you will gain access to:</li>
+				<ul>
+					<li>Profile - the adventures you have gone on, the ones you want to go on, and all your activity</li>
+					<li>Groups - you can create and join groups to share your adventures with others</li>
+					<li>Forum - read and contribute to the forum which has exciting and up to date stories, photos, and videos</li>
+				</ul>
+			</ul>
+			<h4>Other tips:</h4>
+			<ul>
+				<li>After registering you will gain the ability to share your own adventures, rate other reviews, and join the discussion</li>
+				<li>Get excited! and find some awesome things to do.</li>
+				<li>Let us know if you think of anything we should add at mgmt@atlasaur.com</li>
+			</ul>
+		</div>
+		
+	</div>
+	
+	{% if not user %}
+		<div class="row">
+			
+			<span class="center-it">
+				<div class="span12">
+			 		<a href="/login" class="btn btn-large">Login/Register</a>
+			 	</div>
+			</span>
+		
+		</div>
+	{% endif %}
+	
+	<div class="row">
+		<div class="span8 offset2">
+		<br><br>
+			<img src="http://i.imgur.com/kyt1j.jpg" alt="hiking photo">
+		</div>
+	</div>
+	
+			        
+{% endblock %}
+​

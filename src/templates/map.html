@@ -1,0 +1,266 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+	<title>Search for Adventure</title>
+	
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	    <style type="text/css">
+	      html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+	      #map_canvas { height: 100% }
+	    </style>
+	    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+	    <script type="text/javascript" src="http://google-maps-utility-library-v3.googlecode.com/svn/trunk/markerclusterer/src/markerclusterer.js"></script>
+	    
+	    <script type="text/javascript">
+	
+	var map;	
+	var markers = [];
+	var markerCluster;
+	
+	function initialize() {
+	
+		{% if centerlocation %}
+		var centerlocation = {{centerlocation|json_encode|safe}};	
+		var LatLng = centerlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);
+		
+		{% else %}
+		var Lat = 37.7699298; (37.7699298, -93.4469157)
+		var Lng = -93.4469157;
+		
+		{% endif %}
+		
+		{% if radius == "25" %}
+		var zoomAmt = 10;
+		{% elif radius == "50" %}
+			var zoomAmt = 9;
+		{% elif radius == "100" %}
+			var zoomAmt = 8;
+		{% elif radius == "200" %}
+			var zoomAmt = 7;
+		{% elif radius == "400" %}
+			var zoomAmt = 6;
+		{% else %}
+			var zoomAmt = 4;
+		{% endif %}
+			
+	  var USA = new google.maps.LatLng(Lat, Lng);
+	  var mapOptions = {
+	    zoom: zoomAmt,
+	    center: USA,
+	    mapTypeId: google.maps.MapTypeId.TERRAIN
+	  };
+	  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+	  
+	// Global var
+	   var infowindow = new google.maps.InfoWindow();
+	
+	//put all the markers on the map
+	{% for location in locations %}
+	
+	//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+	//I need the safe here because Jinja2 tries to escape the characters otherwise
+	var GPSlocation = {{location.GPSlocation|json_encode|safe}};	
+	var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+	var Lat = parseFloat(LatLng[0]);
+	var Lng = parseFloat(LatLng[1]);	
+	
+	var markerLatlng = new google.maps.LatLng(Lat, Lng);
+    var title = {{location.title|json_encode|safe}}
+    var iwContent = {{location.render_front()|json_encode|safe}}
+	
+    createMarker(markerLatlng, title, iwContent);
+
+     function createMarker(markerLatlng,title,iwContent) {
+         
+    	 var marker = new google.maps.Marker({
+             position: markerLatlng,
+             title: title,
+       });
+
+     google.maps.event.addListener(marker, 'click', function () {
+       infowindow.setContent(iwContent);
+       infowindow.open(map, marker);
+       });
+     
+	   	 //putting the marker onto the markers array
+	     markers.push(marker);
+
+     }
+
+    {% endfor %}
+
+    //creating the marker cluster
+    var markerCluster = new MarkerClusterer(map, markers);
+
+    }
+	
+    </script>
+	
+{% endblock %}
+
+
+{% block content %}
+
+	{% if error %}
+		<div class="row">
+			<div class="span12">
+				<p class="center-it alert alert-error">{{error}}</p>
+			</div>
+		</div>
+	{% endif %}
+	
+	<div class="row">
+		{% if locations_to_render %}
+			<div class="span6">
+		{% else %}
+	 		<div class="span8">
+	 	{% endif %}
+	 		<h2>Find a Location!</h2>
+	 		<ul>
+	 			<li><h3>You can search by location, rating, sport and distance</h3></li> 
+	 			{% if locations_to_render %}
+	 			<li><h3>The top rated locations within your search are listed on the left</h3></li>
+	 			{% endif %}
+	 		</ul>
+	 			 		
+	 		<br>
+	 		
+	 		{% if locations_to_render %}
+				{% for location in locations_to_render %}
+					{{location.render_front() | safe}}
+					<br>
+				{% endfor %}
+			{% else %}
+					 <div style="width:100%; height: 500px; margin-top:10px;">
+						<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+					 </div>
+					
+			 		<br>
+			 		<div class="center-it">
+				  		<h2><a href="/recentlocations">Recent Locations</a> and <a href="/recentrecords">Adventures</a></h2>
+				    </div>
+			{% endif %}
+		    	 		
+	 	</div>
+		
+			{% if locations_to_render %}
+				<div class="span6">
+			{% else %}
+		 		<div class="span4">
+		 	{% endif %}
+					<span class="pull-right grey-background" style="margin:10px;">
+					<form method="get">	
+						<input type="text" placeholder="Search" style="width:250px; height: 30px;" name="location" size="55" /><br><br>
+			
+							<h4>Within: 
+								<select name="radius">
+									<option value="25">25 miles</option>
+							    	<option value="50">50 miles</option>
+									<option value="100" selected>100 miles</option>
+									<option value="200">200 miles</option>
+									<option value="400">400 miles</option>
+								</select>
+							</h4>
+							<br>		
+							
+						<br>
+						    Min Rating:
+						    <label class="radio inline">
+						    <input type="radio" name="rating" value="1"> 1
+						    </label>
+						    <label class="radio inline">
+						    <input type="radio" name="rating" value="2"> 2
+						    </label>
+						    <label class="radio inline">
+						    <input type="radio" name="rating" value="3"> 3
+						    </label>
+						    <label class="radio inline">
+						    <input type="radio" name="rating" value="4"> 4
+						    </label>
+						    <label class="radio inline">
+						    <input type="radio" name="rating" value="5"> 5
+						    </label>
+						    
+						    <br><br>
+						    <select name="postsport">
+								<option value="choose">Choose an element/sport</option>
+						    	<option value="general sea">--general sea--</option>
+								<option value="sailing">sailing</option>
+								<option value="diving">diving</option>
+								<option value="sailing">surfing</option>
+								<option value="kiteboarding">kite boarding</option>
+								<option value="kayaking">kayaking</option>
+						    	<option value="general air">--general air--</option>
+								<option value="skydiving">skydiving</option>
+								<option value="paragliding">paragliding</option>
+								<option value="hanggliding">hang gliding</option>
+								<option value="basejumping">base jumping</option>
+								<option value="powered flight">powered flight</option>
+						    	<option value="general land">--general land--</option>
+								<option value="rockclimbing">rock climbing</option>
+								<option value="hiking">hiking</option>
+								<option value="camping">camping</option>
+								<option value="biking">biking</option>
+								<option value="skiing">skiing</option>
+								<option value="snowboarding">snowboarding</option>
+							</select>
+						    
+						<br>
+				   	<input class="btn btn-large pull-left" type="submit">
+				   	</form>
+				 </span> 	
+				 <br><br><br>
+				 {% if locations_to_render %}
+					 <div style="width:100%; height: 500px; margin-top:10px;">
+						<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+						
+					 </div>
+					<div class="center-it">
+				  		<h4><a href="/recentlocations">Recent Locations</a> and <a href="/recentrecords">Adventures</a></h4>
+				    </div>
+			 		<br>
+			    {% else %}
+			 	
+			 		<div class="pull-right" style="margin:10px;">
+				 		<script type="text/javascript"><!--
+						google_ad_client = "ca-pub-8829279189222088";
+						/* atlasaur-search-page */
+						google_ad_slot = "7741775814";
+						google_ad_width = 300;
+						google_ad_height = 600;
+						//-->
+						</script>
+						<script type="text/javascript"
+						src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+						</script>
+			 		</div>
+			 	
+			    {% endif %}
+				
+	   		</div>
+	</div>
+	
+<!-- 	<div class="row"> -->
+<!-- 		<div class="span12"> -->
+<!-- 			<div style="margin-top:10px;" class="center-it"> -->
+<!-- 				<br><br> -->
+<!-- 				<script type="text/javascript"><!-- -->
+<!-- 				google_ad_client = "ca-pub-8829279189222088"; -->
+<!-- 				/* Search Bottom */ -->
+<!-- 				google_ad_slot = "9486951417"; -->
+<!-- 				google_ad_width = 728; -->
+<!-- 				google_ad_height = 90; -->
+<!-- 				//-->
+<!-- 				</script> -->
+<!-- 				<script type="text/javascript" -->
+<!-- 				src="http://pagead2.googlesyndication.com/pagead/show_ads.js"> -->
+<!-- 				</script> -->
+<!-- 			</div> -->
+<!-- 		</div> -->
+<!-- 	</div> -->
+
+{% endblock %}

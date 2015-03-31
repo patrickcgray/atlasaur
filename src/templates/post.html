@@ -1,0 +1,21 @@
+<div>
+  <div>
+  <br>
+  <div style="color:grey">
+  <div class="post-header">
+      {{p.created.strftime("%b %d, %Y")}}: {{p.category}} - {{p.element}} - {{p.sport}}
+    </div>
+    <div class="post-title">
+      <h3><a href="/post/{{p.key().id()}}/{{p.subject}}">({{ p.ranking }}) - {{p.subject |replace('-',' ')}}</a></h3>
+    </div>
+  </div>
+  </div>
+  <div class="post-content">
+    <p>{{(p._render_text|striptags|urlize(100, true))|safe}}</p>
+    {% if p.submitter %}
+    <div style="color:grey">
+    Submitted by:  <a href="/profile/{{p.user_id}}">{{p.submitter}}</a>
+    </div>
+    {% endif %}
+  </div>
+</div>

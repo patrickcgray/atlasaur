@@ -1,0 +1,161 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Posts</title>
+
+{% endblock %}
+
+{% block content %}
+
+	<br>		
+	<div class="row">
+	    <div class="span2">
+	    
+	    <h5><a href="/posts">Newest</a> or <a href="/topranked">Top Ranked</a> or <a href="/hotposts">Hottest</a></h5><br>
+   		<h5>Would you like something more specific?</h5>
+   		<br>
+   		
+          <h4><a href="/air">Air</a></h4>
+            <ul>
+			    <li><a href="/air/skydiving">Skydiving</a></li>
+			    <li><a href="/air/paragliding">Paragliding</a></li>
+			    <li><a href="/air/hanggliding">Hang Gliding</a></li>
+			    <li><a href="/air/basejumping">Base Jumping</a></li>
+			    <li><a href="/air/poweredflight">Powered Flight</a></li>
+			</ul>
+          <h4><a href="/sea">Sea</a></h4>
+            <ul>
+			    <li><a href="/sea/sailing">Sailing</a></li>
+			    <li><a href="/sea/diving">Diving</a></li>
+			    <li><a href="/sea/surfing">Surfing</a></li>
+			    <li><a href="/sea/kiteboarding">Kite Boarding</a></li>
+			    <li><a href="/sea/kayaking">Kayaking</a></li>
+			</ul>
+          <h4><a href="/land">Land</a></h4>
+            <ul>
+			    <li><a href="/land/rockclimbing">Rock Climbing</a></li>
+			    <li><a href="/land/hiking">Hiking</a></li>
+			    <li><a href="/land/camping">Camping</a></li>
+			    <li><a href="/land/biking">Biking</a></li>
+			    <li><a href="/land/skiing">Skiing</a></li>
+			    <li><a href="/land/snowboarding">Snowboarding</a></li>
+			</ul>
+		</div>
+	
+		<div class="span4">
+		    
+		    {% for post in posts %}
+				{{post.render_front() | safe}}
+			{% endfor %}
+		</div>
+				
+		
+			<div class="span6"> 
+		{% if user %}  	
+		
+			
+			<form method="post">
+				<h5>Add to the Discussion!</h5><br>
+			    <br>
+			      <label>
+			        <input type="text" placeholder="Subject" style="margin-right:30px;" name="subject" value="{{subject}}">
+			      </label>
+				{% if current_user['admin'] %}
+					<select name="postsport">
+						<option value="choose">Choose an element/sport</option>
+				    	<option value="general sea">--general sea--</option>
+						<option value="sailing">sailing</option>
+						<option value="diving">diving</option>
+						<option value="sailing">surfing</option>
+						<option value="kiteboarding">kite boarding</option>
+						<option value="kayaking">kayaking</option>
+				    	<option value="general air">--general air--</option>
+						<option value="skydiving">skydiving</option>
+						<option value="paragliding">paragliding</option>
+						<option value="hanggliding">hang gliding</option>
+						<option value="basejumping">base jumping</option>
+						<option value="powered flight">powered flight</option>
+				    	<option value="general land">--general land--</option>
+						<option value="rockclimbing">rock climbing</option>
+						<option value="hiking">hiking</option>
+						<option value="camping">camping</option>
+						<option value="biking">biking</option>
+						<option value="skiing">skiing</option>
+						<option value="snowboarding">snowboarding</option>
+						<option value="admin">---admin---</option>
+					</select>
+					
+				{% else %}
+				<select name="postsport">
+						<option value="choose">Choose an element/sport</option>
+				    	<option value="general sea">--general sea--</option>
+						<option value="sailing">sailing</option>
+						<option value="diving">diving</option>
+						<option value="sailing">surfing</option>
+						<option value="kiteboarding">kite boarding</option>
+						<option value="kayaking">kayaking</option>
+				    	<option value="general air">--general air--</option>
+						<option value="skydiving">skydiving</option>
+						<option value="paragliding">paragliding</option>
+						<option value="hanggliding">hang gliding</option>
+						<option value="basejumping">base jumping</option>
+						<option value="powered flight">powered flight</option>
+				    	<option value="general land">--general land--</option>
+						<option value="rockclimbing">rock climbing</option>
+						<option value="hiking">hiking</option>
+						<option value="camping">camping</option>
+						<option value="biking">biking</option>
+						<option value="skiing">skiing</option>
+						<option value="snowboarding">snowboarding</option>
+					</select>
+					
+				{% endif %}
+				
+			      <label>
+			        <textarea style="height: 100px; width: 540px;" name="content">{{content}}</textarea>
+			      </label>
+			    
+			   		<input class="btn" type="submit">
+			 	</form>
+			 	<br><br>
+			    			 
+	{% elif not user %}
+	
+		
+			<div class="span6 center-it alert alert-warning">  
+				<h4>You can join the conversation if you <a href="/login">login or register</a></h4>
+			</div>
+			<br><br><br>
+			 
+		
+	{% endif %}
+	
+	{% if error %}
+	   <div class="alert alert-error">Error: {{error}}</div>
+	{% endif %}
+		<h4>A few guidelines:</h4>
+			<ul>
+			    <li>For videos we like <a href="http://vimeo.com/">Vimeo</a> because it is high quality</li>
+			    <li>For pictures we like <a href="http://imgur.com/">Imgur</a> because it is super easy and fast</li>
+			    <li>We like exciting and adventurous stories... not the dull and dreary kind</li>
+			    <li>Email us if you have more ideas:  mgmt@atlasaur.com</li>
+			</ul>
+			
+		</div>
+		
+         		
+   	</div>
+
+<!--  javascript/jquery functions  if I want to use these I need to put this somewhere: <div id="commentArea" class="collapse"> -->
+<script>
+//comment toggle jquery function
+$("#commentArea").collapse({	  
+	  });
+$("#commentArea").collapse("hide")
+
+$("commentBtn").click(function () {
+	$("#commentArea").collapse("hide")
+	}); 
+
+</script>
+​{% endblock %}

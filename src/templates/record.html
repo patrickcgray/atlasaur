@@ -1,0 +1,31 @@
+<div>
+      <h3><a href="/record/{{r.key.id()}}/{{r.title}}">{{r.title |replace('-',' ')}}</a></h3>
+       <div style="color:grey">
+	      <h4><a href="/location/{{r.location_id}}/{{r.location_title}}">Location: {{r.location_title |replace('-',' ')}}</a></h4>
+	      <h4>Sport: {{r.postsport}}</h4>
+	      <h4>Rating: {{r.rating}}/5</h4>
+      </div>
+      
+      <div style="color:black">
+      
+      	<h4>Experience:</h4> {{r.whatdidyoudo}}<br>
+      	<h4>How it was:</h4> {{r.howwasit}} <br>
+      	{% if r.equipment %}
+      	<h4>Equipment</h4> {{r.equipment}} <br>
+      	{% endif %}
+      	
+      	{% if r.tags %}
+      		<h4>Tags</h4>
+      		<p>{{ r.tags|join(', ')}}</p>
+      	{% endif %}
+      </div>
+      
+       <div style="color:grey">
+       {% if r.difficulty %}
+       <h4>Difficulty: {{r.difficulty}}/10</h4>
+       {% endif %}
+      	<h4>Submitted by: <a href="/profile/{{r.user_id}}">{{r.submitter}}</a></h4>
+      </div>
+      <br>
+
+</div>

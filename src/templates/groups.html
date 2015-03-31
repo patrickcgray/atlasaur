@@ -1,0 +1,160 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Groups</title>
+
+{% endblock %}
+
+{% block content %}
+
+	<br>		
+	<div class="row">
+	
+		<div class="span4">
+		    <h3>Why Groups?</h3>
+		    <p>Sharing experiences with a group of friends is one of the best reasons to go out into the wild.  Thus groups are a major part of Exployre; 
+		    allowing friends, clubs, and teams to record their experiences and keep track of each other's adventures.</p>
+		    
+		    <br>
+		    
+		    <form method="get">
+				<input type="search" placeholder="Search for the location" style="width:300px; height: 30px;" name="search_location" size="55" /><br>
+				Main Focus:<br>
+			      <select name="search_postsport" style="width: 300px;">
+								<option value="choose">Choose a sport</option>
+						    	<option value="general sea">--general sea--</option>
+								<option value="sailing">sailing</option>
+								<option value="diving">diving</option>
+								<option value="sailing">surfing</option>
+								<option value="kiteboarding">kite boarding</option>
+								<option value="kayaking">kayaking</option>
+						    	<option value="general air">--general air--</option>
+								<option value="skydiving">skydiving</option>
+								<option value="paragliding">paragliding</option>
+								<option value="hanggliding">hang gliding</option>
+								<option value="basejumping">base jumping</option>
+								<option value="balloons">balloons</option>
+						    	<option value="general land">--general land--</option>
+								<option value="rockclimbing">rock climbing</option>
+								<option value="hiking">hiking</option>
+								<option value="camping">camping</option>
+								<option value="biking">biking</option>
+								<option value="skiing">skiing</option>
+								<option value="snowboarding">snowboarding</option>
+				  </select>
+					<br><br>
+					<input class="btn" type="submit"><br>
+		</form>
+		    
+		    <br>
+			<img src="http://i.imgur.com/lF5U0.jpg" alt="group hiking photo">
+		
+		</div>
+	
+		<div class="span4">
+			{% if groups_to_render %}
+				<h2>Matching Groups</h2>
+				{% for group in groups_to_render %}
+					<h4><a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a></h4>
+					<br>
+				{% endfor %}
+			
+			{% else %}
+		
+			    <h2>Popular Groups</h2>
+			    {% for group in groups %}
+					<h4><a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a></h4>
+				{% endfor %}
+			
+			{% endif %}
+		</div>
+				
+		{% if user %}  
+			<div class="span4"> 	
+		
+			
+			<form method="post">
+				<h3>Create a Group!</h3>
+				<br>
+			    	Group Name:<br>
+			      <label>
+			        <input type="text" placeholder="Name" style="margin-right:30px;" name="name" value="{{name}}">
+			      </label>		      
+					Quick Description:<br>
+			      <label>
+			        <textarea style="height: 100px; width: 300px;" name="description">{{description}}</textarea>
+			      </label>
+			      Geographic Center (not required):<br>
+			      <label>
+			        <input type="text" placeholder="Location" style="margin-right:30px;" name="location" value="{{location}}">
+			      </label>
+			      Main Focus (not required):<br>
+			      <select name="postsport" style="width: 300px;">
+								<option value="choose">Choose a sport</option>
+						    	<option value="general sea">--general sea--</option>
+								<option value="sailing">sailing</option>
+								<option value="diving">diving</option>
+								<option value="sailing">surfing</option>
+								<option value="kiteboarding">kite boarding</option>
+								<option value="kayaking">kayaking</option>
+						    	<option value="general air">--general air--</option>
+								<option value="skydiving">skydiving</option>
+								<option value="paragliding">paragliding</option>
+								<option value="hanggliding">hang gliding</option>
+								<option value="basejumping">base jumping</option>
+								<option value="balloons">balloons</option>
+						    	<option value="general land">--general land--</option>
+								<option value="rockclimbing">rock climbing</option>
+								<option value="hiking">hiking</option>
+								<option value="camping">camping</option>
+								<option value="biking">biking</option>
+								<option value="skiing">skiing</option>
+								<option value="snowboarding">snowboarding</option>
+				  </select>
+				  <br>
+				  Public?
+   			      <label class="radio inline">
+			      <input type="radio" name="public" value="true" selected> Public
+			      </label>
+			      <label class="radio inline">
+			      <input type="radio" name="public" value="false"> Private
+			      </label>
+			      
+			      <br><br><br>
+			    
+			   	  <input class="btn" type="submit">
+			 </form>
+			 	<br><br>
+			 	{% if error %}
+	   			<div class="alert alert-error">Error: {{error}}</div>
+				{% endif %}
+			</div>
+			    			 
+		{% elif not user %}
+	
+		
+			<div class="span4">
+				<div class="center-it alert alert-warning">  
+					<h4>You can create your own groups if you <a href="/login">login or register</a></h4>
+				</div>
+			</div>
+			<br><br><br>
+			 
+		
+		{% endif %}		
+         		
+   	</div>
+
+<!--  javascript/jquery functions  if I want to use these I need to put this somewhere: <div id="commentArea" class="collapse"> -->
+<script>
+//comment toggle jquery function
+$("#commentArea").collapse({	  
+	  });
+$("#commentArea").collapse("hide")
+
+$("commentBtn").click(function () {
+	$("#commentArea").collapse("hide")
+	}); 
+
+</script>
+​{% endblock %}

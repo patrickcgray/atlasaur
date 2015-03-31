@@ -1,0 +1,96 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+<title>{{post.subject | replace("-", " ")}}</title>
+<meta name="description" content="{{post.content}}">
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row">
+
+	<div class="span1">
+		<form method="post">
+			      
+			  	<input type="radio" name="vote" value="upvote">upvote<br>
+				<input type="radio" name="vote" value="downvote">downvote<br>
+				<br>
+				<input type="submit" class="btn btn-medium">
+			      
+	   	</form>
+	</div>
+	
+	<div class="span10">
+		{% if owner %}
+			<div class="pull-right">
+				<a href="/editpost/{{post.key().id()}}/{{post.subject}}" style="color: #F2FAFF; text-decoration:none;" class="btn btn-small btn-primary">Edit</a>
+				<a href="/deletepost/{{post.key().id()}}/{{post.subject}}" class="btn btn-small">Delete</a>
+			</div><br><br>
+		{% endif %}
+	
+	  {{post.render() | safe}}
+	  <br><br>
+	  <div class="center-it">
+	  {% if mic_content %} 
+	  {{mic_content | safe}}
+	  {% endif %}
+	  </div>
+	  <br>
+	</div>
+</div>
+
+<hr>
+{% if user %}
+<form method="post">
+		<div class="row">
+			<div class="span6 offset3"> 
+			    <h4>have a response?</h4>
+			    <br>
+			      <label>
+			        <textarea style="height: 100px; width: 560px;" name="content">{{content}}</textarea>
+			      </label>
+				{% if error %}
+			      <div class="alert alert-error">Error: {{error}}</div>
+			    {% endif %}
+		   </div>
+
+		</div>
+		
+		<div class="row">
+				<div class="span2 offset3">
+		   			<input class="btn" type="submit">
+		   		</div>
+		</div>
+</form>
+{% endif %}
+<div class="row">
+	<div class="span8 offset2">
+
+			{% for comment in comments %}
+				{{comment.render() | safe}}
+				<br>
+			{% endfor %}
+	</div>
+</div>
+
+<div class="row">
+	<div class="span12 center-it">
+	
+		<script type="text/javascript"><!--
+		google_ad_client = "ca-pub-8829279189222088";
+		/* exployre-post-bottom */
+		google_ad_slot = "1669926654";
+		google_ad_width = 728;
+		google_ad_height = 90;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+		
+	</div>
+</div>
+	
+{% endblock %}

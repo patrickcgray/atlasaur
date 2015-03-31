@@ -1,0 +1,14 @@
+<div>
+      <h3><a href="/record/{{r.key.id()}}/{{r.title}}">{{r.title |replace('-',' ')}}</a></h3>
+       <div style="color:grey">
+          <h4><a href="/location/{{r.location_id}}/{{r.location_title}}">Location: {{r.location_title |replace('-',' ')}}</a></h4>
+	      <h4>Sport: {{r.postsport}}</h4>
+	      <h4>Rating: {{r.rating}}</h4>
+	      <p>{{r.whatdidyoudo|truncate(100)}}</p>
+      </div>      
+       <div style="color:grey">
+      	<h4>Submitted by: <a href="/profile/{{r.user_id}}">{{r.submitter}}</a></h4>
+      </div>
+      <br>
+
+</div>

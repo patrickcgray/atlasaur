@@ -1,0 +1,190 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+<title>{{record.title | replace("-", " ")}}</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<meta name="description" content="{{record.description}}">
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	    <style type="text/css">
+	      html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+	      #map_canvas { height: 100% }
+	    </style>
+	    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+	    <script type="text/javascript">
+	
+	var map;	
+	
+	function initialize() {
+		var GPSlocation = {{record.GPSlocation|json_encode|safe}};	
+		var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);	
+		
+		var markerLatlng = new google.maps.LatLng(Lat, Lng);
+	  var mapOptions = {
+	    zoom: 8,
+	    center: markerLatlng,
+	    mapTypeId: google.maps.MapTypeId.TERRAIN
+	  };
+	  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+	  
+	// Global var
+	var infowindow = new google.maps.InfoWindow();
+		
+	//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+	//I need the safe here because Jinja2 tries to escape the characters otherwise
+	
+    var title = {{record.title|json_encode|safe}}
+    var iwContent = {{record.render()|json_encode|safe}}
+    createMarker(markerLatlng ,title,iwContent);
+	
+	
+    function createMarker(latlon,title,iwContent) {
+        var marker = new google.maps.Marker({
+            position: latlon,
+            title: title,
+            map: map
+      });
+
+
+    google.maps.event.addListener(marker, 'click', function () {
+      infowindow.setContent(iwContent);
+      infowindow.open(map, marker);
+      });
+
+      }
+    	
+	}
+	
+	</script>
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+	
+	<div class="span5">
+	  {{record.render() | safe}}
+	  {% if groups %}
+		  <div style="color:grey">
+		    <h4>Groups: </h4>
+				{% for group in groups %}
+		    		<a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a><br>
+		    	{% endfor %}
+		  </div>
+	  {% endif %}
+	  <br>
+	  {% if user %}
+	  <form method="post">
+	  	<span class="alert alert-warning slight-space">
+	  		({{record.entertaining}}) <input type="checkbox" name="entertaining" value="entertaining">Entertaining
+	  	</span>
+	  	<br><br>
+	  	<span class="alert alert-info slight-space">
+			({{record.informative}}) <input type="checkbox" name="informative" value="informative">Informative
+		</span>
+		<br><br>
+		<span class="alert alert-success slight-space">
+			({{record.exceptional}}) <input type="checkbox" name="exceptional" value="exceptional">Exceptional
+		</span>
+		<br><br>
+		<input class="btn" value="Rate" type="submit">
+	  </form>
+	  
+	<form method="post">
+	    <h4>have a response?</h4>
+	    <br>
+	    <label>
+	        <textarea style="height: 100px; width: 400px;" name="content">{{content}}</textarea>
+	      </label>
+		{% if error %}
+	      <div class="alert alert-error">Error: {{error}}</div>
+	    {% endif %}
+		<br>
+		<input class="btn" type="submit">
+	</form>
+	<br><br>
+	
+	{% else %}
+	
+	<span class="alert alert-warning slight-space">
+	  		({{record.entertaining}}) Entertaining
+	  	</span>
+	  	<br><br>
+	  	<span class="alert alert-info slight-space">
+			({{record.informative}}) Informative
+		</span>
+		<br><br>
+		<span class="alert alert-success slight-space">
+			({{record.exceptional}}) Exceptional
+		</span>
+	
+	{% endif %}
+
+		{% for comment in recordcomments %}
+			{{comment.render() | safe}}
+			<br>
+		{% endfor %}
+	  
+	</div>
+	
+	<div class="span6 offset1">
+		{% if owner %}
+			<div class="pull-right">
+				<a href="/editrecord/{{keyid}}/{{record.title}}" style="color: #F2FAFF; text-decoration:none;" class="btn btn-small btn-primary">Edit</a>
+				<a href="/deleterecord/{{keyid}}/{{record.title}}" class="btn btn-small">Delete</a>
+			</div><br><br>
+		{% endif %}
+	
+		<div style="width:100%; height: 300px;">
+			  <div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+		</div>
+	
+		{% if owner %}
+		    <br><br>
+	        <form action="{{upload_url}}" method="POST" enctype="multipart/form-data">
+	        	Upload a Picture:
+	        	<br>
+	        	(put your best picture first as that is the one that will show up in searches!)
+	        	<input type="file" name="file"><br> <button type="submit" class="btn">Upload</button>
+	        </form>
+        {% endif %}
+        
+	  	{% for photo in photos %}
+	  		<br><img src="{{photo}}" alt="user adventure image"><br>
+	  	{% endfor %}
+	</div>
+</div>
+
+<hr>
+
+<div class="row">
+	<div class="span12 center-it">
+	
+		<script type="text/javascript"><!--
+		google_ad_client = "ca-pub-8829279189222088";
+		/* exployre-location/record-bottom */
+		google_ad_slot = "9207749815";
+		google_ad_width = 728;
+		google_ad_height = 90;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+		
+	</div>
+</div>
+<script>
+$("#delete").click(function(){  
+	$.post('/deleterecord/{{keyid}}/{{record.title}}', function(data) {
+		  $('.result').html(data);
+		});
+}); 
+
+</script>
+	
+{% endblock %}

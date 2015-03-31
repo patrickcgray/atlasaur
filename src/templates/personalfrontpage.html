@@ -1,0 +1,130 @@
+{% extends "master.html" %}
+
+{% block head %}
+	<title>Atlasaur</title>
+    <meta name="description" content="Atlasaur is making it simple to find adventure and track your experiences.">
+    <meta name="author" content="Patrick Gray">
+
+{% endblock %}
+
+{% block content %}
+
+ <div class="row">
+ 
+ 	<div class="span2">
+ 		<img src="http://i.imgur.com/kVa6r.png" alt="Atlasaur logo">
+ 	</div>
+ 
+ 	<div class="span6 offset1">
+ 
+        <h3 class="center-it">Suggested Local Adventures:</h3><br>
+        
+        
+        {% if currentregistereduser.geo_center %}
+	        {% if record_photos %}		    	
+		    	
+            <div id="myCarousel" class="carousel slide">
+            
+				  <div class="carousel-inner">
+				  
+				  <div class="active item hoverlighten center-it white-text">
+				  		<a href="/record/{{record_photos[-1][2]}}/{{record_photos[-1][1]}}"><img src="{{record_photos[-1][0]}}" class="hoverlighten" style="max-height:300px;" alt="user adventure image"></a>
+				        <div class="carousel-caption">
+				        	<h3 class="center-it">{{record_photos[-1][1] | replace("-", " ")}}</h3>
+				        </div>
+				    </div>
+				  
+				  {% for photo in record_photos %}
+				  
+				  	<div class="item hoverlighten center-it white-text">
+				  		<a href="/record/{{photo[2]}}/{{photo[1]}}"><img src="{{photo[0]}}" class="hoverlighten" style="max-height:400px;" alt="user adventure image"></a>
+				        <div class="carousel-caption">
+				        	<h3 class="center-it">{{photo[1] | replace("-", " ")}}</h3>
+				        </div>
+				    </div>
+				    
+				   {% endfor %}
+				    
+				  </div>
+				  
+				  <a class="carousel-control left" href="#myCarousel" data-slide="prev">&lsaquo;</a>
+				  <a class="carousel-control right" href="#myCarousel" data-slide="next">&rsaquo;</a>
+				  
+			</div>
+		    	
+		    {% else %}
+		    
+		    	<h5 class="alert alert-warning center-it">It doesn't look like there are many recorded adventures in your area...</h5>
+		    
+		    {% endif %}
+	    	
+	    	<h4 class="center-it"><a href="/recentrecords/{{currentregistereduser.geo_center[1:-1]}}" class="center-it">--More Local Adventures--</a></h4>
+	    	<br>
+	    	<hr>
+    	
+	    {% else %}
+			<h5 class="alert alert-warning center-it">You should <a href="/editprofile">add your location</a> so we can give you some ideas!</h5>
+		{% endif %}
+		
+		</div>
+    
+    </div>
+
+<div class="row">
+	
+	 	<span class="span6">
+		{% if group_records %}
+		
+			<h3>Recent Adventures from your Groups:</h3>
+		
+		{% for record in group_records %}
+			<h5>{{record.group_names[0] | replace("-", " ")}}</h5>
+			<h4><a href="/record/record.key.id()/record.title}}">Adventure: {{record.title | replace("-", " ")}}</a></h4>
+			<h5>Location: {{record.location_title | replace("-", " ")}}</h5>
+			<br>
+		{% endfor %}
+		
+		{% else %}
+			<h5 class="center-it alert alert-warning">This section will be awesome once you <a href="/groups">join some groups!</a></h5> 
+			<br>
+			<h5>Here are some ideas:</h5>
+			    {% for group in groups %}
+					<h4><a href="/groups/{{group.key.id()}}/{{group.name}}">{{group.name | replace("-", " ")}}</a></h4>
+				{% endfor %}
+			
+		{% endif %}
+
+		</span>
+		
+		<span class="span6">
+			
+			{% if posts %}
+		    	<h4>Announcements:</h4>
+				{% for post in posts %}
+					{{post.render_admin() | safe}}
+				{% endfor %}			
+			{% endif %}
+		</span>
+		
+	</div>
+	
+	<div class="row" style="margin-top:10px;">
+		<div class="span12">
+			<div class="center-it">
+				<script type="text/javascript"><!--
+					google_ad_client = "ca-pub-8829279189222088";
+					/* atlasaur-personalfront-bottom */
+					google_ad_slot = "6265042615";
+					google_ad_width = 728;
+					google_ad_height = 90;
+					//-->
+				</script>
+					<script type="text/javascript"
+					src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+			        </script>
+			</div>
+		</div>
+	</div>
+	
+		
+​{% endblock %}

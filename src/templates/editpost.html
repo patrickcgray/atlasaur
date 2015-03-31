@@ -1,0 +1,67 @@
+{% extends "master.html" %}
+	
+{% block head %}
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<title>{{post.subject | replace("-", " ")}}</title>
+<meta name="description" content="Editing a user's post">	
+
+{% endblock %}
+
+{% block content %}
+
+{% if error %}
+	<div class="row">
+		<div class="alert alert-error">Error: {{error}}</div>
+	</div>
+{% endif %}
+<div class="row">
+	<div class="span12">
+	<h2 class="center-it">Edit your post:</h2><br>
+	</div>
+</div>
+
+<div class="row">
+<div class="span12">
+			<form method="POST">
+				<label>
+			        <input type="text" placeholder="Subject" style="margin-right:30px;" name="subject" value="{{subject}}">
+			      </label>
+	
+					<select name="postsport">
+						<option value="choose">Choose an element/sport</option>
+				    	<option value="general sea">--general sea--</option>
+						<option value="sailing">sailing</option>
+						<option value="diving">diving</option>
+						<option value="sailing">surfing</option>
+						<option value="kiteboarding">kite boarding</option>
+						<option value="kayaking">kayaking</option>
+				    	<option value="general air">--general air--</option>
+						<option value="skydiving">skydiving</option>
+						<option value="paragliding">paragliding</option>
+						<option value="hanggliding">hang gliding</option>
+						<option value="basejumping">base jumping</option>
+						<option value="powered flight">powered flight</option>
+				    	<option value="general land">--general land--</option>
+						<option value="rockclimbing">rock climbing</option>
+						<option value="hiking">hiking</option>
+						<option value="camping">camping</option>
+						<option value="biking">biking</option>
+						<option value="skiing">skiing</option>
+						<option value="snowboarding">snowboarding</option>
+					</select>
+			      
+			      
+			
+			      <label>
+			        <textarea style="height: 100px; width: 540px;" name="content">{{content}}</textarea>
+			      </label>
+			    
+			   		<input class="btn" type="submit">
+			 	</form>
+</div>
+</div>
+
+
+
+
+{% endblock %}

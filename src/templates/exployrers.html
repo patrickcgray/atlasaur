@@ -1,0 +1,30 @@
+{% extends "master.html" %}
+
+{% block head %}
+	<title>{{title | capitalize}}</title>
+{% endblock %}
+
+{% block content %}
+    
+	<div class="row">
+	
+		<div class="span8 offset2">
+		    	<h3>Here are the top users on Exployre:</h3>
+		</div>
+		
+	</div>
+	
+	<div class="row">
+		<div class="span6 offset2">		    
+		    <ol>
+			    {% for exployrer in exployrers %}
+				    {% if exployrer.username %}
+						<li><a href="/profile/{{exployrer.user_id}}">{{exployrer.username | safe}} Prestige: {{exployrer.prestige | safe}}</a></li>
+					{% endif %}
+				{% endfor %}
+			</ol>
+   		</div>
+   	</div>
+
+          
+{% endblock %}

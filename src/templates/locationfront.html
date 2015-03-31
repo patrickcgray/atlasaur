@@ -1,0 +1,11 @@
+<div>
+      <h3><a href="/location/{{loc.key.id()}}/{{loc.title}}">{{loc.title |replace('-',' ')}}</a></h3>
+       <div style="color:grey">
+	      <h4>Type: {{loc.locationtype}}</h4>
+	      <h4>Rating: {{loc.rating|round(2)}}</h4>
+      </div>
+      
+      <h4>Description:</h4> {{loc.description|truncate(100)}}<br>
+      <br>
+
+</div>

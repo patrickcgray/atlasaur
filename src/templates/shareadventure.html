@@ -1,0 +1,179 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+	<title>Share Your Adventure</title>
+	
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	    <style type="text/css">
+	      html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+	      #map_canvas { height: 100% }
+	    </style>
+	    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+	    <script type="text/javascript">
+	
+	var map;	
+	
+	function initialize() {
+	
+		{% if centerlocation %}
+		var centerlocation = {{centerlocation|json_encode|safe}};	
+		var LatLng = centerlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);
+		
+		{% else %}
+		var Lat = 37.7699298; (37.7699298, -93.4469157)
+		var Lng = -93.4469157;
+		
+		{% endif %}
+		
+		{% if radius == "25" %}
+			var zoomAmt = 10;
+		{% elif radius == "50" %}
+			var zoomAmt = 9;
+		{% elif radius == "100" %}
+			var zoomAmt = 8;
+		{% elif radius == "200" %}
+			var zoomAmt = 7;
+		{% elif radius == "400" %}
+			var zoomAmt = 6;
+		{% else %}
+			var zoomAmt = 4;
+		{% endif %}
+			
+	  var USA = new google.maps.LatLng(Lat, Lng);
+	  var mapOptions = {
+	    zoom: zoomAmt,
+	    center: USA,
+	    mapTypeId: google.maps.MapTypeId.TERRAIN
+	  };
+	  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+	  
+	// Global var
+	   var infowindow = new google.maps.InfoWindow();
+	
+	//put all the markers on the map
+	{% for location in locations %}
+	
+	//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+	//I need the safe here because Jinja2 tries to escape the characters otherwise
+	var GPSlocation = {{location.GPSlocation|json_encode|safe}};	
+	var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+	var Lat = parseFloat(LatLng[0]);
+	var Lng = parseFloat(LatLng[1]);	
+	
+	var markerLatlng = new google.maps.LatLng(Lat, Lng);
+    var title = {{location.title|json_encode|safe}}
+    var iwContent = {{location.render_share()|json_encode|safe}}
+    createMarker(markerLatlng ,title,iwContent);
+	
+	
+    function createMarker(latlon,title,iwContent) {
+        var marker = new google.maps.Marker({
+            position: latlon,
+            title: title,
+            map: map
+      });
+
+
+    google.maps.event.addListener(marker, 'click', function () {
+      infowindow.setContent(iwContent);
+      infowindow.open(map, marker);
+      });
+
+      }
+    
+	{% endfor %}
+	
+	}
+	
+	</script>
+
+{% endblock %}
+
+
+{% block content %}
+	<div class="row">
+	 	<span class="span8">
+	 		<h2>Share Your Experiences!</h2>
+	 		<ul>
+	 			<li><h3>Please search for the location of your adventure and click the button to add a new experience there</h3></li> 
+	 			<li><h3>We are trying to keep all experiences in the same location together</h3></li>
+	 			{% if search %}
+	 			<li><h3>If you can't find the right location on the map <a href="/newlocation">add a new one</a></h3></li>
+	 			{% endif %}
+	 		</ul>
+ 		{% if not user %}
+			<div class="alert alert-warning center-it">
+				You can share your own adventures if you <a href="/login">login or register</a>
+			</div>	
+			<br>
+	 	{% endif %}
+	 	</span>
+		
+		<form method="get">
+			<span class="span4">
+				<div class="grey-background">
+					<input type="search" placeholder="Search for the location" style="width:250px; height: 30px;" class="pull-right" name="location" size="55" /><br><br><br>
+					<span class="pull-right">
+						<h4>Within: 
+							<select name="radius">
+								<option value="25" selected>25 miles</option>
+						    	<option value="50">50 miles</option>
+								<option value="100">100 miles</option>
+								<option value="200">200 miles</option>
+								<option value="400">400 miles</option>
+							</select>
+						</h4>
+						</span>
+						<br><br><br>
+						<input class="btn pull-right" type="submit"><br><br>
+				</div>
+	   		</span>
+		</form>
+	</div>
+	
+	{% if error %}
+	<div class="row">
+		<div class="span12">
+			<p class="center-it alert alert-error">{{error}}</p>
+		</div>
+	</div>
+	{% endif %}
+		
+	<div class="row">
+			
+			{% if locations_to_render %}
+			<br>
+			<hr>
+			<span class="span6">
+			<h3>Results:</h3>
+				{% for location in locations_to_render %}
+					{{location.render_share() | safe}}
+					<br>
+				{% endfor %}
+				
+			</span>
+			
+			<span class="span6">
+			  <div style="width:100%; height: 500px;">
+			  	<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+			  </div>
+			
+			{% else %}
+			
+			<br>
+			<hr>		
+
+				<span class="span6 offset3">
+				<img src="http://i.imgur.com/GFY93.jpg" alt="sierra nevada photo">
+			
+			{% endif %}
+		 	
+	 </span>
+	</div>
+	
+
+{% endblock %}

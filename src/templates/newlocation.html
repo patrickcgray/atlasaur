@@ -1,0 +1,248 @@
+
+
+{% extends "master.html" %}
+
+{% block head %}
+
+<link href="/static/bootstrap.css" rel="stylesheet">
+
+<title>New Location</title>
+
+<!-- <link type="text/css" href="/static/jquery-ui-1.8.23.custom.css" rel="Stylesheet" />	
+<script type="text/javascript" src="/static/js/jquery-ui-1.8.23.custom.min.js"></script>
+
+<title>Create a New Location</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+    <style type="text/css">
+      html { height: 100% }
+      body { height: 100%; margin: 0; padding: 0 }
+      #map { height: 100% }
+    </style>
+    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+      <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?libraries=places&sensor=false"></script>
+    <script type="text/javascript">
+
+	var map;
+	var GPSlocation;
+
+
+function initialize() {
+  var haightAshbury = new google.maps.LatLng(37.7699298, -93.4469157);
+  var mapOptions = {
+    zoom: 4,
+    center: haightAshbury,
+    mapTypeId: google.maps.MapTypeId.TERRAIN
+  };
+  map =  new google.maps.Map(document.getElementById("map"), mapOptions);
+
+  google.maps.event.addListener(map, 'click', function(event) {
+    addMarker(event.latLng);
+  });
+}
+
+/* function addMarker(location) {
+//I save the location right here
+	GPSlocation = location;
+	document.getElementById("GPSlocation").value = GPSlocation;
+    marker = new google.maps.Marker({
+    position: location,
+    map: map
+  });
+} */
+
+
+var marker;
+function addMarker(location) {
+    // ... snip ...
+    if (!marker) {
+        // Create the marker if it doesn't exist
+        GPSlocation = location;
+        document.getElementById("GPSlocation").value = GPSlocation;
+        marker = new google.maps.Marker({
+        position: location,
+        map: map
+        });
+    }
+    // Otherwise, simply update its location on the map.
+    else { 
+    	marker.setPosition(location); 
+    	GPSlocation = location;
+    	document.getElementById("GPSlocation").value = GPSlocation;
+    }
+}
+
+</script> -->
+
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+ 	<span class="span8 offset2">
+ 		<h2 class="center-it">Create a New Location!</h2>
+ 		<h5 class="center-it">Make sure to check <a href=/map>here</a> to see if the location already exists</h5><br>
+ 	
+ 	</span>
+ </div>
+ 
+ <div class="row">
+ 	
+ 	<form method="POST">
+ 	 	<span class="span6">
+	    
+		    {% if error %}
+				<div class="alert alert-error">Error: {{error}}</div><br>
+			{% endif %}
+		    	<input type="hidden" name="GPSlocation" id="GPSlocation">
+		    	
+			<div class="alert alert-info">
+				<h3>Required:</h3>
+				
+				<h4>Location Name:</h4>
+			    <input  name="location_name" value="{{location_name}}" type="text" id="location_name" placeholder="ex: Hanging Rock State Park"><br><br> 
+			    
+			    <h4>Location Address:</h4>
+			    <input  name="location_address" value="{{location_address}}" type="text" id="location_address" placeholder="ex: Hanging Rock State Park, Danbury, North Carolina"><br><br>
+				
+				<h4>Location Description:</h4>
+				<textarea  name="location_description"; style="width: 300px; height: 65px;">{{location_description}}</textarea>
+				<br>
+				
+			    <h4>Title of Your Adventure:</h4>
+			    <input  name="title" value="{{title}}" type="text" id="title" placeholder="ex: Good Times Hanging Around"><br><br>
+			    
+			    <h4>What did you do:</h4>
+				<textarea  name="whatdidyoudo"; style="width: 300px; height: 65px;">{{whatdidyoudo}}</textarea>
+				<br>
+				
+				<h4>How was it:</h4>
+				<textarea  name="howwasit"; style="width: 300px; height: 40px;">{{howwasit}}</textarea>
+				<br>
+		
+			    <h4>Your rating:</h4>
+			    <label class="radio inline">
+			    <input type="radio" name="rating" value="1"> 1
+			    </label>
+			    <label class="radio inline">
+			    <input type="radio" name="rating" value="2"> 2
+			    </label>
+			    <label class="radio inline">
+			    <input type="radio" name="rating" value="3"> 3
+			    </label>
+			    <label class="radio inline">
+			    <input type="radio" name="rating" value="4"> 4
+			    </label>
+			    <label class="radio inline">
+			    <input type="radio" name="rating" value="5"> 5
+			    </label>
+				    
+			</div>
+		    
+		</span>
+		    
+		<span class="span6">
+				
+			<div class="alert alert-success">
+				<h3>Optional (but helpful!):</h3>
+				
+				<h4>Equipment:</h4>
+				<textarea  name="equipment"; style="width: 300px; height: 40px;">{{equipment}}</textarea>
+				<br><br>
+				
+				<h4>Tags: (split by commas)</h4>
+				<textarea  name="tags"; style="width: 300px; height: 40px;" placeholder="waterfall, sunset, great for families, strong winds, etc">{{tags}}</textarea>
+				<br><br>
+				
+				<h4>Difficulty (1 being the bunny slope and 10 being Mt. Everest):</h4>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="1"> 1
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="2"> 2
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="3"> 3
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="4"> 4
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="5"> 5
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="6"> 6
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="7"> 7
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="8"> 8
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="9"> 9
+				    </label>
+				    <label class="radio inline">
+				    <input type="radio" name="difficulty" value="10"> 10
+				    </label>
+				<br>
+				
+				<h4>Location Website:</h4>
+			    <input  name="website" value="{{website}}" type="text" id="website" placeholder="http://www.jockeysridgestatepark.com/"><br><br>
+							    
+			    <select name="postsport">
+									<option value="choose">Choose a sport</option>
+							    	<option value="general sea">--general sea--</option>
+									<option value="sailing">sailing</option>
+									<option value="diving">diving</option>
+									<option value="sailing">surfing</option>
+									<option value="kiteboarding">kite boarding</option>
+									<option value="kayaking">kayaking</option>
+							    	<option value="general air">--general air--</option>
+									<option value="skydiving">skydiving</option>
+									<option value="paragliding">paragliding</option>
+									<option value="hanggliding">hang gliding</option>
+									<option value="basejumping">base jumping</option>
+									<option value="balloons">balloons</option>
+							    	<option value="general land">--general land--</option>
+									<option value="rockclimbing">rock climbing</option>
+									<option value="hiking">hiking</option>
+									<option value="camping">camping</option>
+									<option value="biking">biking</option>
+									<option value="skiing">skiing</option>
+									<option value="snowboarding">snowboarding</option>
+				</select>
+				
+				<br><br>
+				
+				<select name="locationtype">
+									<option value="General">Choose a location type</option>
+							    	<option value="National Park/Forest">National Park/Forest</option>
+							    	<option value="State Park/Forest">State Park/Forest</option>
+									<option value="Adventure Business">Adventure Business</option>
+									<option value="Public Space">Public Space</option>
+									<option value="Other">Other</option>
+				</select>
+				
+				    <br><br>
+				    
+				{% if groups %}
+				    <select name="group_tag" style="width: 300px;">
+									<option value="choose">Add to a group's page</option>
+									{% for group in groups %}
+							    		<option value="{{group.key.id()}}">{{group.name | replace("-", " ")}}</option>
+							    	{% endfor %}
+					</select>
+					<br><br>
+				
+				{% endif %}
+				
+			</div>
+				    
+				(you can add pictures on the next page)<br><br>
+			    <button type="submit" class="btn btn-large">Submit</button>
+		    
+	 	</span>
+	 </form>
+</div>
+
+{% endblock %}

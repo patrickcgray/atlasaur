@@ -1,0 +1,32 @@
+{% extends "master.html" %}
+
+{% block head %}
+
+	<title>Recent Locations</title>
+	
+{% endblock %}
+
+
+{% block content %}
+	<div class="row">
+	 	<div class="span12">
+	 		<h2>Check Out Some Recent Locations:</h2>
+	 	</div>
+	</div>
+		
+	<div class="row">
+				
+				<span class="span6">
+				
+					{% for location in locations %}
+						{{location.render_front() | safe}}
+						<br>
+					{% endfor %}
+					
+				</span>
+				<span class="span6">
+					<img src="http://i.imgur.com/UwEHS.jpg" alt="sierra nevada photo">
+	 			</span>
+	</div>
+	
+{% endblock %}

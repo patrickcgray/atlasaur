@@ -1,0 +1,57 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>Complete Profile</title>
+{% endblock %}
+
+{% block content %}
+
+<form method="post">
+		<div class="row">
+		<div class="span8"> 
+		    <h4>Complete your profile:</h4>
+		    <br>
+		      <label>
+		      <h5>If you put your real name this will work a lot better:</h5>
+		        <input type="text" placeholder="Full Name" style="margin-right:30px;" name="username"; value="{{username}}">
+		      </label>
+		      
+		      <label>
+		      <h5>Email (will not be shared with anyone):</h5>
+		        <input type="text" placeholder="jondoe@email.com" style="margin-right:30px;" name="email"; value="{{email}}">
+		      </label>		      
+		
+		      <label>
+		      <h5>Why are you interesting?</h5>
+		        <textarea style="height: 100px; width: 540px;" name="bio">{{bio}}</textarea>
+		      </label>
+		      
+		      <label>
+		      <h5>Favorite Quote?</h5>
+		        <textarea style="height: 60px; width: 540px;" name="quote">{{quote}}</textarea>
+		      </label>
+		      
+		      <h5>Geographic Center:</h5>
+		      {% if GPS %}
+		      Current GPS location is: {{GPS}}.  Leave it blank if you don't want to change it.<br>
+		      {% else %}
+		      (if you want to hear about adventures near you type in a city or area you live around)<br>
+		      {% endif %}
+		        <textarea style="height: 30px; width: 300px;" name="geo_center">{{geo_center}}</textarea>
+		      </label>
+			{% if error %}
+		      <div class="alert alert-error">Error: {{error}}</div>
+		    {% endif %}
+		    
+		
+		   </div>
+
+		   </div>
+		   <div class="row">
+				<div class="span2">
+		   			<input class="btn" type="submit">
+		   		</div>
+		   	</div>
+</form>
+
+{% endblock %}

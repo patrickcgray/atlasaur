@@ -1,0 +1,177 @@
+{% extends "master.html" %}
+	
+{% block head %}
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<title>{{location.title | replace("-", " ")}}</title>
+<meta name="description" content="{{location.description}}">
+
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	    <style type="text/css">
+	      html { height: 100% }
+	      body { height: 100%; margin: 0; padding: 0 }
+	      #map_canvas { height: 100% }
+	    </style>
+	    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+	    <script type="text/javascript">
+	
+	var map;	
+	
+	function initialize() {
+		var GPSlocation = {{location.GPSlocation|json_encode|safe}};	
+		var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);	
+		
+		var markerLatlng = new google.maps.LatLng(Lat, Lng);
+	  var mapOptions = {
+	    zoom: 9,
+	    center: markerLatlng,
+	    mapTypeId: google.maps.MapTypeId.TERRAIN
+	  };
+	  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+	  
+	// Global var
+	var infowindow = new google.maps.InfoWindow();
+		
+	//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+	//I need the safe here because Jinja2 tries to escape the characters otherwise
+	
+    var title = {{location.title|json_encode|safe}}
+    var iwContent = {{location.render_front()|json_encode|safe}}
+    createMarker(markerLatlng ,title,iwContent);
+	
+	
+    function createMarker(latlon,title,iwContent) {
+        var marker = new google.maps.Marker({
+            position: latlon,
+            title: title,
+            map: map
+      });
+
+
+    google.maps.event.addListener(marker, 'click', function () {
+      infowindow.setContent(iwContent);
+      infowindow.open(map, marker);
+      });
+
+      }
+    	
+	}
+	
+	</script>
+	
+	<script src="http://code.jquery.com/jquery-latest.js"></script>
+	
+
+{% endblock %}
+
+{% block content %}
+
+<div class="row" style="margin-top:10px;">
+	
+	<div class="span4">
+	  {{location.render() | safe}}
+	  {% if user %}
+	  <a href="/addadventure/{{location.key.id()}}/{{location.title}}" style="color: #F2FAFF; text-decoration:none;" class="btn btn-primary btn-light">Add your own experience</a>
+	  <br><br>
+	  <a href="/addtodo/{{location.key.id()}}/{{location.title}}" style="color: #000000; text-decoration:none;" class="btn btn-dark">Add this to your to-do list</a>
+	  {% endif %}
+	  
+	  <hr>
+	  <br>
+	  
+	  <h4>Recent location updates:</h4>
+	    <h6>(ex: trail closings, new slopes, etc. short, essential, and helpful info)</h6>
+	    <br>
+	    {% if updates %}
+		  	{% for update in updates %}
+				{{update.render() | safe}}
+		  	{% endfor %}
+	    {% else %}
+	    	<h4>There don't seem to be any updates...</h4>
+	    {% endif %}
+	    
+	    {% if user %}
+		    <form method="post">
+		      	<label>
+		        	<textarea style="height: 50px; width: 300px;" name="content">{{content}}</textarea>
+		      	</label>
+				<br>
+				<input class="btn" type="submit">
+			</form>
+		{% endif %}
+	  
+	</div>
+	
+	<div class="span4">
+	 <br>
+	 <h3>Adventures at {{location.title | replace("-", " ")}}:</h3><br>
+	 {% if records %}
+		{% for record in records %}
+			{{record.render_front() | safe}}
+		{% endfor %}
+	 {% else %}
+	  <h4>There aren't any adventures here yet.  You should add one!</h4>
+	 {% endif %}
+	
+	</div>
+	
+	<div class="span4">
+	{% if user %}
+	<a href="/incorrectlocation/{{location.key.id()}}/{{location.title}}" style="color: #000000; text-decoration:none;" class="btn btn-warning pull-right">Incorrect Location</a><br><br>
+	{% endif %}
+	<div style="width:95%; height: 300px;">
+		  <div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+	</div>
+	  <br>
+	  {% if photos %}
+	  		<h3>Proof of the Adventure:</h3>
+	  	{% for photo in photos %}
+	  		<br><img src="{{photo}}" alt="user adventure image"><br>
+	  	{% endfor %}
+	  {% endif %}
+	</div>
+	
+</div>
+<br>
+
+<hr>
+
+<script>
+/* //jquery to toggle the add adventure form
+$("#commentBtn").click(function () {
+$("#toggleme").toggle();
+});
+//this is the html, just put the toggleable section in this <div>
+<div id="toggleme" style="display: none">
+</div> */
+
+/* //jquery to submit the add to todo list info
+$.ajax({
+	  type: "POST",
+	  url: "some.php",
+	  data: { name: "John", location: "Boston" }
+	}).done(function( msg ) {
+	  alert( "Data Saved: " + msg );
+	}); */
+</script>
+
+<div class="row">
+	<div class="span12 center-it">
+	
+		<script type="text/javascript"><!--
+		google_ad_client = "ca-pub-8829279189222088";
+		/* exployre-location/record-bottom */
+		google_ad_slot = "9207749815";
+		google_ad_width = 728;
+		google_ad_height = 90;
+		//-->
+		</script>
+		<script type="text/javascript"
+		src="http://pagead2.googlesyndication.com/pagead/show_ads.js">
+		</script>
+		
+	</div>
+</div>
+
+{% endblock %}

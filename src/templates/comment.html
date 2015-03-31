@@ -1,0 +1,14 @@
+  <div>
+  	  <div class="post-header">
+      	<h6>Date: {{c.created.strftime("%b %d, %Y")}}</h6>
+      </div>
+  </div>
+  
+  <div class="post-content">    
+    <p>{{(c._render_text | urlize(100, true)) | safe}}</p>
+    
+    {% if c.submitter %}
+    <h6>Submitted by:  <a href="/profile/{{c.user_id}}">{{c.submitter}}</a></h6>
+    {% endif %}
+    <hr>
+  </div>

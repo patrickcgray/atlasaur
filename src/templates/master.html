@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>    
+  <meta name="description" content="Atlasaur is sharing every place on the Earth where people adventure and recording your favorite experiences.">
+  
+	<!-- Google webmaster code -->  
+  	<meta name="google-site-verification" content="bwH2bhtbks179NDyIozkmR-8k7PxEkq7uI-BMcAJDNY" />
+  	
+    <!-- bing/msn webmaster code -->
+    <meta name="msvalidate.01" content="12DF2593A5EA0EBD65F9A230C117394A" />
+    
+     <!--google analytics code*-->
+ 	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-32831760-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>  
+    
+    <!-- bing/msn webmaster code -->
+    <meta name="msvalidate.01" content="12DF2593A5EA0EBD65F9A230C117394A" />
+    
+     <!--google analytics code*-->
+ 	<script type="text/javascript">
+
+	  var _gaq = _gaq || [];
+	  _gaq.push(['_setAccount', 'UA-32831760-1']);
+	  _gaq.push(['_trackPageview']);
+	
+	  (function() {
+	    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+	    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+	    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+	  })();
+	</script>
+
+    <!-- Le styles -->
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+    </style>
+
+    <!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+
+    <!-- Le fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="static/img/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="static/img/ico/apple-touch-icon-114-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="static/img/ico/apple-touch-icon-72-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" href="static/img/ico/apple-touch-icon-57-precomposed.png">
+    
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Patrick Gray">
+    
+    {% block head %}
+    
+    <title>Atlasaur</title>
+    <meta charset="utf-8">
+    <meta name="description" content="Atlasaur is making it simple for you to find adventure and track your experiences.">
+    
+    {% endblock %}
+  </head>
+
+  <body onload="initialize()">
+	<div class="mastercontainer">
+		<div class="top-z">
+		    <div class="navbar navbar-fixed-top">
+		      <div class="navbar-inner">
+		        <div class="container">
+		          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		            <span class="icon-bar"></span>
+		          </a>
+		          <a class="brand" href="/">Atlasaur</a>
+		          <div class="nav-collapse">
+		            <ul class="nav">
+		              <li><a href="/map">Search for Adventure</a></li>
+		              <li><a href="/community">The Community</a></li>
+		              <li>
+		              	<a href="/profile">
+			              	{% if user %}
+								{% if user['username'] %}
+									{{user['username']}}
+								{% else %}
+									Profile
+								{% endif %}
+							{% else %}
+								Profile
+							{% endif %}
+						</a>
+					  </li>
+		              <li><a href="/about">About</a></li>
+
+					<!--   
+						this was the search functionality but it is no longer needed
+						<li>		  
+						<form action="/search" class="navbar-search">
+						  <div>
+						    <input type="text" placeholder="Search" class="search-query pull-right" name="q" size="55" />
+						  </div>
+						</form>
+						<script type="text/javascript" src="http://www.google.com/coop/cse/brand?form=cse-search-box&amp;lang=en"></script>
+					  </li> -->
+		              
+		            </ul>
+		          </div><!--/.nav-collapse -->
+		        </div>
+		      </div>
+		    </div>
+	    </div>
+
+	<div style="margin-top: 60px;"></div>
+
+    	<div class="row">
+	    		<div class="pull-right" style="margin-top:5px; margin-right:10px;">
+	    			{% if user %}
+	    				<a href="/shareadventure" style="color: #000000; text-decoration:none; margin: 5px;" class="btn-dark btn">Share Your Experiences</a>
+	    				<a href="/posts" style="color: #000000; text-decoration:none; margin: 5px;" class="btn">Discuss on the Forum</a>
+	    				<a href="/groups" style="color: #000000; text-decoration:none; margin: 5px;" class="btn">Find/Create a Group</a>
+	    				
+						<a href="/logout" style="color: #000000; text-decoration:none; margin: 5px;" class="btn-dark btn">Logout</a>
+					{% else %}
+					    <a href="/login" style="color: #000000; text-decoration:none; margin: 5px;" class="btn-dark btn">Sign-in/Register</a>
+					{% endif %}
+	    		</div>
+    		<br><br>
+    		<hr>
+    	</div> 
+
+
+  <div class="container">
+
+      <!-- sponsor row taken out for now
+			<div class="row">
+			
+				<div class="span4">
+		           	<h2>Premium Sponsors:</h2>
+		           		<h4>These aren't just ads.<br>
+		           		They are actual sponsors for our members.
+		           		<a href="/sponsors">Find out more</a>
+		           		</h4>
+		        </div>
+				<br>
+		        <div class="span2">
+		           <a href="http://www.beyondadrenaline.com"><img style="height:80px; width:80px; margin:1px;" src="http://i903.photobucket.com/albums/ac232/PatrickCliff/balogo.png"></a>
+		        </div>
+		        
+		        <div class="span2">
+		            <a href="/sponsorinfo"><img style="height:80px; width:80px;" src="http://i903.photobucket.com/albums/ac232/PatrickCliff/adholder.png"></a>
+		       </div>
+		       
+		        <div class="span2">
+		          <a href="/sponsorinfo"><img style="height:80px; width:80px; margin:1px;" src="http://i903.photobucket.com/albums/ac232/PatrickCliff/adholder.png"></a>
+		        </div>
+		        
+		        <div class="span2">
+					<a href="/sponsorinfo"><img style="height:80px; width:80px; margin:1px;" src="http://i903.photobucket.com/albums/ac232/PatrickCliff/adholder.png"></a>
+		        </div>
+		        
+		    </div>
+    		
+    		
+    -->     
+    
+      	{% block content %}
+
+		{% endblock %}
+      
+<div class="push">
+</div>
+
+      <hr>
+      
+      	<div class="row">
+	        	<div class="span2">
+	        		<img src="http://i.imgur.com/kVa6r.png" alt="Atlasaur logo">
+	        	</div> 
+	        	<div class="span10">
+		        	<h4>
+		        		<span class="center-it">&copy; Atlasaur 2012 - <a href="https://twitter.com/Atlasaur">Follow Us on Twitter</a> - <a href="http://www.facebook.com/atlasaur">Like us on Facebook</a> 
+		        		- <a href="https://plus.google.com/u/0/108530452033323439100/posts">+1 us on Google+</a> - <a href="/posts">Forum</a> -  We'd love to hear from you: mgmt@atlasaur.com</span>
+		        	</h4>
+	        	</div>
+        </div>
+        
+</div> <!-- /container -->
+
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  	<script type="text/javascript" src="/static/js/bootstrap.js"></script>
+    
+	</div>
+  </body>
+</html>

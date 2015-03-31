@@ -1,0 +1,227 @@
+{% extends "master.html" %}
+
+{% block head %}
+<title>{{profileowner.username}}</title>
+
+	{% if pagetype == "adventures" %}
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		    <style type="text/css">
+		      html { height: 100% }
+		      body { height: 100%; margin: 0; padding: 0 }
+		      #map_canvas { height: 100% }
+		    </style>
+		    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+		    <script type="text/javascript">
+		
+		var map;	
+		
+		function initialize() {
+		  var USA = new google.maps.LatLng(37.7699298, -93.4469157);
+		  var mapOptions = {
+		    zoom: 3,
+		    center: USA,
+		    mapTypeId: google.maps.MapTypeId.TERRAIN
+		  };
+		  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+		  
+		// Global var
+		   var infowindow = new google.maps.InfoWindow();
+		
+		//put all the markers on the map
+		{% for record in records %}
+		
+		//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+		//I need the safe here because Jinja2 tries to escape the characters otherwise
+		var GPSlocation = {{record.GPSlocation|json_encode|safe}};	
+		var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);	
+		
+		var markerLatlng = new google.maps.LatLng(Lat, Lng);
+	    var title = {{record.title|json_encode|safe}}
+	    var iwContent = {{record.render_front()|json_encode|safe}}
+	    createMarker(markerLatlng ,title,iwContent);
+		
+		
+	    function createMarker(latlon,title,iwContent) {
+	        var marker = new google.maps.Marker({
+	            position: latlon,
+	            title: title,
+	            map: map
+	      });
+	
+	
+	    google.maps.event.addListener(marker, 'click', function () {
+	      infowindow.setContent(iwContent);
+	      infowindow.open(map, marker);
+	      });
+	
+	      }
+	    
+		{% endfor %}
+		
+		}
+		
+		</script>
+	{% endif %}
+
+
+	{% if pagetype == "todolist" %}
+			<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+		    <style type="text/css">
+		      html { height: 100% }
+		      body { height: 100%; margin: 0; padding: 0 }
+		      #map_canvas { height: 100% }
+		    </style>
+		    <script type="text/javascript" src="http://maps.googleapis.com/maps/api/js?key=AIzaSyD-pLsocZXv5mYwJsSxMghJncxa6iklFUU&sensor=false"></script>
+		    <script type="text/javascript">
+		
+		var map;	
+		
+		function initialize() {
+		  var USA = new google.maps.LatLng(37.7699298, -93.4469157);
+		  var mapOptions = {
+		    zoom: 3,
+		    center: USA,
+		    mapTypeId: google.maps.MapTypeId.TERRAIN
+		  };
+		  map =  new google.maps.Map(document.getElementById("map_canvas"), mapOptions);
+		  
+		// Global var
+		   var infowindow = new google.maps.InfoWindow();
+		
+		//put all the markers on the map
+		{% for todo in todolocations %}
+		
+		//need to do the JSON encoding because JavaScript can't have Jinja2 variables
+		//I need the safe here because Jinja2 tries to escape the characters otherwise
+		var GPSlocation = {{todo.GPSlocation|json_encode|safe}};	
+		var LatLng = GPSlocation.replace("(", "").replace(")", "").split(", ")
+		var Lat = parseFloat(LatLng[0]);
+		var Lng = parseFloat(LatLng[1]);	
+		
+		var markerLatlng = new google.maps.LatLng(Lat, Lng);
+	    var title = {{todo.title|json_encode|safe}}
+	    var iwContent = {{todo.render_front()|json_encode|safe}}
+	    createMarker(markerLatlng ,title,iwContent);
+		
+		
+	    function createMarker(latlon,title,iwContent) {
+	        var marker = new google.maps.Marker({
+	            position: latlon,
+	            title: title,
+	            map: map
+	      });
+	
+	
+	    google.maps.event.addListener(marker, 'click', function () {
+	      infowindow.setContent(iwContent);
+	      infowindow.open(map, marker);
+	      });
+	
+	      }
+	    
+		{% endfor %}
+		
+		}
+		
+		</script>
+	{% endif %}
+
+{% endblock %}
+
+{% block content %}
+<div class="row">
+<div class="span12">
+
+
+  <ul class="nav nav-tabs center-it">
+    <li><a href="/profile/{{profile_id}}" class="btn btn-large">Main</a></li>
+    <li><a href="/profile/{{profile_id}}/adventures" class="btn btn-large">Adventures</a></li>
+    <li><a href="/profile/{{profile_id}}/posts" class="btn btn-large">Posts</a></li>
+    <li><a href="/profile/{{profile_id}}/todolist" class="btn btn-large">To-do List</a></li>
+  </ul>​
+
+</div>
+</div>
+
+<div class="row">
+	<span class="span3">
+	<h2>{{profileowner.username}}</h2>
+    	<img src="{{avatar}}" alt="user photo" style="max-height: 200px;" class="center-it">
+    </span>
+
+{% if pagetype == "posts" %}
+	 	<span class="span7">
+	 	{% if owner %}
+			<h3>Your Posts</h3>
+		{% else %}
+			<h3>{{profileowner.username}}'s Posts</h3>
+		{% endif %}
+			    
+	    {% for post in personalposts %}
+			{{post.render_front() | safe}}
+		{% endfor %}
+		</span>
+		</div>
+{% endif %}
+ 
+{% if pagetype == "adventures" %}    
+	 	<span class="span3">
+	 		{% if owner %}
+				<h3>Your Adventures</h3>
+			{% else %}
+				<h3>{{profileowner.username}}'s Adventures</h3>
+			{% endif %}
+						
+			{% for record in records %}
+				{{record.render_front() | safe}}
+				<br>
+			{% endfor %}
+			</span>
+			<span class="span5 offset1">
+		
+			<div style="width:100%; height: 400px;">
+		  		<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+		  	</div>
+		
+		</span>
+		</div>
+		
+{% endif %}
+	
+	
+{% if pagetype == "todolist" %}
+	 	<span class="span3">
+	 	
+	 	{% if owner %}
+			<h3>Your To-do List</h3>
+		{% else %}
+			<h3>{{profileowner.username}}'s To-do List</h3>
+		{% endif %} 
+		
+		{% if todolocations %}
+			{% if owner %}
+				<h6>You can mark an adventure off your to-do list by clicking on the link and adding your own adventure to that location.</h6>
+			{% endif %}
+		{% for location in todolocations %}
+				{{location.render_front() | safe}}
+				<br>
+		{% endfor %}
+		
+		{% else %}
+		<h4>{{profileowner.username}} should add something to their to-do list!</h4>
+		{% endif %}
+			
+		</span>
+		
+		<span class="span5 offset1">
+		 	<div style="width:100%; height: 500px;">
+				<div id="map_canvas" style="width:100%; height:100%;  border:5px solid green;"></div>
+			</div>
+		</span>
+	</div>
+{% endif %}
+
+
+​{% endblock %}
